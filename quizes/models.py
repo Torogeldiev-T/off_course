@@ -20,8 +20,8 @@ class Quiz(ItemBase):
     def __str__(self):
         return f"{self.topic} - {self.title}"
 
-    def get_qustions(self):
-        return
+    def get_questions(self):
+        return self.questions.all()
 
 
 class Question(models.Model):
@@ -55,4 +55,4 @@ class Result(models.Model):
     score = models.FloatField()
 
     def __str__(self):
-        return str(self.pk)
+        return f"Your quiz result on: {self.quiz} is {self.score} percent"
