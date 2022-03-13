@@ -1,6 +1,6 @@
 from django.db import models
 from courses.models import ItemBase
-from django.contrib.auth.models import User
+from accounts.models import User
 
 DIFFICULTY_CHOICES = (("Easy", "Easy"), ("Medium", "Medium"), ("Hard", "Hard"))
 

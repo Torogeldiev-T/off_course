@@ -1,10 +1,15 @@
 from django.db import models
-from django.contrib.auth.models import User
+from accounts.models import *
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from .fields import OrderField
 
-MODULE_CHOICES = (("Assignment", "Assignment"), ("Test", "Test"), ("Quiz", "Quiz"))
+MODULE_CHOICES = (
+    ("Assignment", "Assignment"),
+    ("Test", "Test"),
+    ("Quiz", "Quiz"),
+    ("Topic", "Topic"),
+)
 
 
 class Subject(models.Model):
@@ -19,7 +24,9 @@ class Subject(models.Model):
 
 
 class Course(models.Model):
-    owner = models.ManyToManyField(User, name="owners", related_name="courses_created")
+    teacher = models.ForeignKey(
+        Teacher, related_name="courses_created", on_delete=models.CASCADE
+    )
     subject = models.ForeignKey(
         Subject, related_name="courses", on_delete=models.CASCADE
     )
@@ -27,12 +34,22 @@ class Course(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     overview = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
+    enrollement_key = models.CharField(max_length=10, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ["-created"]
 
     def __str__(self):
         return self.title
+
+
+class CourseParticipant(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+
+    is_finished = models.BooleanField(default=False)
+    enrolled = models.DateTimeField(auto_now_add=True)
 
 
 class Module(models.Model):
@@ -57,7 +74,15 @@ class Content(models.Model):
         ContentType,
         on_delete=models.CASCADE,
         limit_choices_to={
-            "model__in": ("text", "video", "image", "file", "quiz", "assignment")
+            "model__in": (
+                "text",
+                "video",
+                "image",
+                "file",
+                "quiz",
+                "assignment",
+                "topic",
+            )
         },
     )
     object_id = models.PositiveIntegerField()
