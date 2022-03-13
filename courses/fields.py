@@ -1,13 +1,11 @@
-from curses.ascii import NUL
-from turtle import mode
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 
 class OrderField(models.PositiveIntegerField):
-    def __init__(self, for_fields=None, *args, **kvargs):
+    def __init__(self, for_fields=None, *args, **kwargs):
         self.for_fields = for_fields
-        super.__init__(*args, **kvargs)
+        super().__init__(*args, **kwargs)
 
     def pre_save(self, model_instance, add):
         if getattr(model_instance, self.attname) is None:
