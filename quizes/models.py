@@ -1,12 +1,13 @@
 from django.db import models
 from courses.models import ItemBase
-from accounts.models import User
+from accounts.models import Student
 
 DIFFICULTY_CHOICES = (("Easy", "Easy"), ("Medium", "Medium"), ("Hard", "Hard"))
 
 
 class Quiz(ItemBase):
     topic = models.CharField(max_length=120)
+    # TODO: add type field which indicates whether it is preliminary or not.
     number_of_questions = models.IntegerField()
     time = models.IntegerField(help_text="Duration of the quiz in minutes")
     required_score = models.IntegerField(
@@ -51,7 +52,7 @@ class Answer(models.Model):
 
 class Result(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     score = models.FloatField()
 
     def __str__(self):
