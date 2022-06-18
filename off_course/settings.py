@@ -131,3 +131,5 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
     ],
 }
+
+AUTHENTICATION_BACKENDS = ["accounts.backends.EmailBackend"]
